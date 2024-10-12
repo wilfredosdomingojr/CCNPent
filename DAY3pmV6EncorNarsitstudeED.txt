@@ -17,28 +17,47 @@ ip dhcp pool vlan10
   network 10.2.1.0 255.255.255.0
   default-router 10.2.1.254
 !
+D1:
+config t
+vlan 500
+name ENCOREXAMVLAN
+Interface Vlan 500
+ no shut
+ ip add 10.10.100.1 255.255.255.0
+exit
+D2:
+config t
+Interface Vlan 500
+ no shut
+ ip add 10.10.100.2 255.255.255.0
+exit
 A1:
 config t
 int e0/0
  switchport mode access
- switchport access vlan 10
+ switchport access vlan 500
 A2:
 config t
 int e1/0
  switchport mode access
- switchport access vlan 10
+ switchport access vlan 500
 p1:
 config t
 int e0/0
- ip add dhcp
+ ip add 10.10.100.10 255.255.255.0
  no shut
 p2:
 config t
 int e1/0
- ip add dhcp
+ ip add 10.10.100.20 255.255.255.0
+ no shut
+s1:
+config t
+int e1/0
+ ip add 10.10.100.30 255.255.255.0
  no shut
 
-TASK9.1: Combined d1 and d2 for hsrp:
+TASK9.1: Combined d1 and d2 for hsrp vs glbp vs vrrp:
 d1:
 config t
 int vlan 10
@@ -54,6 +73,15 @@ int vlan 10
  standby 10 preempt
  standby 10 priority 100
 end
+
+Task9.1: default STatic routes for p1, p2, s1:
+p1:/s1:
+config t
+ip route 0.0.0.0   0.0.0.0  10.10.100.1
+p2:
+config t
+ip route 0.0.0.0   0.0.0.0  10.10.100.2
+
 
 TASK.9.2: SUPER BASIC EIGRP FOR D1/D2:
 D1:
@@ -72,6 +100,7 @@ router eigrp 100
  network 10.2.1.0 0.0.0.255
  network 10.2.2.0 0.0.0.255
  network 192.168.1.128 0.0.0.31
+ network 10.10.100.0 0.0.0.255
 end
 
 or NEXUS-like
@@ -83,6 +112,7 @@ conf t
 		network 10.2.1.1 0.0.0.0
 		network 10.2.2.1 0.0.0.0
 		network 192.168.1.129 0.0.0.0
+                network 10.10.100.1 0.0.0.0
 		end
 
 
@@ -94,6 +124,7 @@ router eigrp 100
  network 10.2.1.0 0.0.0.255
  network 10.2.2.0 0.0.0.255
  network 192.168.1.128 0.0.0.31
+ network 10.10.100.0 0.0.0.255
 end
 show ip eigrp neighbor
 
@@ -106,10 +137,11 @@ conf t
 		network 10.2.1.2 0.0.0.0
 		network 10.2.2.2 0.0.0.0
 		network 192.168.1.130 0.0.0.0
+                network 10.10.100.2 0.0.0.0
 		end
 	sh ip eigrp nei
 
-R4:
+R4: use 32bit eigrp for R4, classic Method:
 config t
 router eigrp 100
  no auto-summary
@@ -120,25 +152,58 @@ router eigrp 100
 OSPF NETWORK:
 R4:
 config t
+hostname R4-r20
+int e1/2
+ ip add 10.2.203.20 255.255.255.0
 router ospf 1
-network 10.1.1.8 0.0.0.3 area 34
+network 10.2.203.0 0.0.0.255 area 20
 
 R3:
 config t
+int e1/2
+ ip add 10.2.203.3 255.255.255.0
+int e1/1
+ ip add 10.0.23.3 255.255.255.0
+int lo 0
+  ip add 10.0.3.3 255.255.255.0
 router ospf 1
-network 10.1.1.4 0.0.0.3 area 0
-network 10.1.1.8 0.0.0.3 area 34
-
+network 10.2.203.0 0.0.0.255 area 20
+network 10.0.23.0 0.0.0.255 area 0
+network 10.0.3.0 0.0.0.255 area 0
 R2:
 config t
+int e1/1
+ ip add 10.0.23.2 255.255.255.0
+int e1/2
+ ip add 10.1.102.2 255.255.255.0
+int lo 0
+  ip add 10.0.2.2 255.255.255.0
 router ospf 1
-network 10.1.1.4 0.0.0.3 area 0
-network 10.1.1.0 0.0.0.3 area 12
+network 10.1.102.0 0.0.0.255 area 10
+network 10.0.23.0 0.0.0.255 area 0
+network 10.0.2.0 0.0.0.255 area 0
 
 R1:
 config t
+hostname R1-R10
+int lo 0
+ ip add 1.1.1.1 255.255.255.255
+int e1/0
+ ip add 10.1.102.10 255.255.255.0
 router ospf 1
-network 10.1.1.0 0.0.0.3 area 12
+network 10.1.102.0 0.0.0.255 area 10
+network 1.1.1.1 0.0.0.0 area 10
+task1: make r20 BDR and R10 as Drother:
+R3:
+config t
+int e1/2
+   ip  ospf priority 255
+  !AKO ANG MANANALO, AS DR! TALO KA BDR.
+R10:
+config t
+int e1/0
+ ip  ospf priority 0
+ !talo ako, di na lalaban: loser/drother
 
 @@@
 TASK9.3: BASIC eBGP FOR ISPS and R1.
