@@ -348,6 +348,8 @@ IPV6 ADDRESSING FOR THE ISP'S
 		int e1/1
 			ipv6 add b:1:11:b::1/64
 			end
+@R2:
+
                 ###################
 				~~~~~~~~~~~~~~~~~~~~~~~~~IPV6 BGP Configuration~~~~~~~~~~~~~~~~~~~~~~~
 @ISP4
