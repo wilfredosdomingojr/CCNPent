@@ -1356,3 +1356,72 @@ R20#
 ping vrf CORP 10.100.1.1 source e1/3.101
 !!!!!
 
+IP SLA: SERVICE LEVEL AGREEMENT HANDS-ON PRACTICE:
+R1-PLDT:        r2-GlobeL: .6
+CONFIG T
+no loggin console
+int gi 3
+no shut
+ip add 192.168.103.5/.6 255.255.255.0
+do wr
+
+BasicInternet and Config:
+config t
+line vty 0 14
+exec-timeout 0 0
+ip route 0.0.0.0  0.0.0.0  192.168.108.2
+int gi 1
+no shut
+ip add 192.168.108.5 255.255.255.0
+int gi 2
+no shut
+ip add 192.168.102.5 255.255.255.0
+do ping 8.8.8.8
+r2-globe:
+config t
+line vty 0 14
+exec-timeout 0 0
+ip route 0.0.0.0  0.0.0.0  192.168.108.2
+int gi 1
+no shut
+ip add 192.168.108.6 255.255.255.0
+int gi 2
+no shut
+ip add 192.168.102.6 255.255.255.0
+do ping 8.8.8.8
+
+HSRP: hot standby routing protocol: lowEndCisco " standby "
+vrrp: virtual router redundancy protocol: palo,fortinet,cisco "vrrp"
+glbp: global load balancing protocol: highEndCisco "glbp"
+R1-PLDT main LIne:
+config t
+int gi 2
+standby  version 2
+standby 1 ip 192.168.102.7
+standby 1 preempt
+standby 1 Priority 150
+standby 1 track 5 decrement 60
+exit
+ip sla 5
+ icmp-echo 8.8.8.8
+ freq 15
+ exit
+ip sla schedule 5 life forever start-time now
+track 5 ip sla 5
+ delay down 5 up 2
+ exit
+HSRP for globe backup:
+config t
+int gi 2
+standby version 2
+standby 1 ip 192.168.102.7
+standby 1 preempt
+standby 1 Priority 101
+end
+
+homeLAB:
+tracer 8.8.8.8
+tracer 8:8:8:8::8888
+R1-pldt, r2-globe
+ip sla + hsrp
+RafflePrices: 64gb, 128gb, NetWorkEngT-shirt, Free training PCNSA
