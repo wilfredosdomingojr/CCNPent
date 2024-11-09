@@ -1,6 +1,6 @@
 !@@@FOR CORE TAAS ONLY
 config t
-   hostname CORETAAS-M
+   hostname CORETAAS-12
    enable secret pass
    service password-encryption
    no logging console
@@ -15,19 +15,19 @@ config t
       exec-timeout 0 0
    Int Vlan 1
      no shutdown
-	 ip add 10.M.1.2 255.255.255.0
+	 ip add 10.12.1.2 255.255.255.0
 	 description MGMTDATA
    Int Vlan 10
      no shutdown
-	 ip add 10.M.10.2 255.255.255.0
+	 ip add 10.12.10.2 255.255.255.0
 	 description WIRELESS
    Int Vlan 50
      no shutdown
-	 ip add 10.M.50.2 255.255.255.0
+	 ip add 10.12.50.2 255.255.255.0
 	 description IPCCTV
    Int Vlan 100
      no shutdown
-	 ip add 10.M.100.2 255.255.255.0
+	 ip add 10.12.100.2 255.255.255.0
 	 description VOICEVLAN
 
 !@@@LeafSwitchONLY
@@ -65,7 +65,19 @@ config t
      no shutdown
 	 ip add 10.12.100.4 255.255.255.0
 	 description VOICEVLAN
-	 
+
+EncorLAB1: trunk it, etherchannit, allowit
+taas/baba:
+config t
+Interface Range Fa0/10-12
+ switchport trunk encapsulation Dot1Q
+ switchport mode trunk
+ switchport trunk allowed vlan 1,10,50,100,999
+ !Enable LinkAggretionCP etherchannel
+ Channel-group 10 mode active
+ channel-protocol Lacp
+ do show etherchannel summary
+
 !DHCP: DYNAMIC HOST CONFIGURATION PROTOCOL
 !@@@LEAF SWITCH
 config t
@@ -96,7 +108,16 @@ ip dhcp pool VOICEVLAN
    option 150 ip 10._.100.8   
    END
 
+VTP: VLAN TRUNKING PROTOCOL: NEEDs trunking, SYNC VLANS.
+CoreTAAS/BABA:
+config t
+vtp domain CCNP
+vtp password ENCOR401
+vtp mode server
+exit
+
 !!CREATING AND PLACING PORTS INSIDEAVLAN:
+CORETAAS:
 config t
 vlan 10
    name WIFIVLAN
@@ -104,6 +125,9 @@ vlan 50
    name IPCCTVLAN
 vlan 100
    name VOICEVLAN
+exit
+COREbabA:
+Config t
 Int Fa 0/2
   switchport mode access
   switchport access vlan 10  
@@ -126,11 +150,22 @@ Int Fa 0/7
   switchport mode access
   switchport access vlan 100    
  end
- 
+
+IP CAMERA needs MAC dhcp Reservation:
+CoreBABA:
+ip dhcp pool CAM6
+host 10._.50.6 255.255.255.0
+client-identifier 001a.0709.c258
+ip dhcp pool CAM8
+host 10._.50.8 255.255.255.0
+client-identifier 001a.0704.7f5b
+end
+sh ip dhcp binding
+
 !!cisco unified call manager Express command
 !@@@CUCM-M
 config t
-   hostname CUCM-12
+   hostname CUCM-_
    enable secret pass
    service password-encryption
    no logging console
@@ -145,22 +180,22 @@ config t
       exec-timeout 0 0
    Int Fa 0/0
      no shutdown
-	 ip add 10.12.100.8 255.255.255.0 
+	 ip add 10._.100.8 255.255.255.0 
 	 end
    
 !!!CUCM ANALOG PHONES CONFIG
 configure terminal
 dial-peer voice 1 pots
-   destination-pattern 1200
+   destination-pattern m00
    port 0/0/0
 dial-peer voice 2 pots
-   destination-pattern 1201
+   destination-pattern m01
    port 0/0/1
 dial-peer voice 3 pots
-   destination-pattern 1202
+   destination-pattern m02
    port 0/0/2
 dial-peer voice 4 pots
-   destination-pattern 1203
+   destination-pattern m03
    port 0/0/3
 end
 
