@@ -941,6 +941,9 @@ config t
  ip vrf clientPNBa
    rd 999:3
    route-target 64999:3 
+ip vrf clientEASTWESTbankA
+   rd 666:666
+   route-target 69666:4
    exit
 ***
 R1:pez
@@ -954,6 +957,9 @@ config t
  ip vrf clientPNBb
   rd 999:3
   route-target 64999:3
+ ip vrf clientEASTWESTbankB
+   rd 666:666
+   route-target 69666:4
   exit
 **********
 R4-PEa#show ip vrf
