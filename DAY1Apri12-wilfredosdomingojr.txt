@@ -209,24 +209,24 @@ telephony-service
    no auto-reg-ephone
    max-ephones 5
    max-dn 20
-   ip source-address 10._.100.8 port 2000
+   ip source-address 10.41.100.8 port 2000
    create cnf-files
 ephone-dn 1
-  number _11
+  number _41
 ephone-dn 2
-  number _22
+  number _41
 ephone-dn 3
-  number _33
+  number _41
 ephone-dn 4
-  number _44
+  number _41
 ephone-dn 5
-  number _55
+  number _41
 ephone-dn 6
-  number _66
+  number _41
 ephone-dn 7
-  number _77
+  number _41
 ephone-dn 8
-  number _88	
+  number _41	
 Ephone 1
   Mac-address ____.____.____
   type 8945
