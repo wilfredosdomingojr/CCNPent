@@ -359,14 +359,14 @@ config t
 @edge:
 config t
 router ospf 1
-router-id m.0.0.1
+router-id 41.0.0.1
 network 200.0.0.0 0.0.0.255 area 0
-network m.0.0.1 0.0.0.0 area M
-network 10.m.m.0 0.0.0.255 area M
+network 41.0.0.1 0.0.0.0 area 41
+network 10.41.41.0 0.0.0.255 area 41
 @CoreBABA:   use Route summarization:
 config t
 router ospf 1
-network 10.m.0.0 0.0.255.255 area M
+network 10.41.0.0 0.0.255.255 area 41
 @CUCN:  use SUperTamad method:
 config t
 router ospf 1
