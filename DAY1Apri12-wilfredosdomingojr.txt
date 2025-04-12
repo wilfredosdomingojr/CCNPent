@@ -370,7 +370,7 @@ network 10.41.0.0 0.0.255.255 area 41
 @CUCN:  use SUperTamad method:
 config t
 router ospf 1
-network 0.0.0.0  255.255.255.255 area M
+network 0.0.0.0  255.255.255.255 area 41
 
 
 
