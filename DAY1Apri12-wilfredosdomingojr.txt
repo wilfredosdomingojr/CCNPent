@@ -146,20 +146,20 @@ Int Fa 0/3
 Int Fa 0/5
   switchport mode access
   switchport access vlan 1
- switchport vlan 100
+ switchport voice vlan 100
 Int Fa 0/7
   switchport mode access
   switchport access vlan 1  
-  switchport vlan 100
+  switchport voice vlan 100
  end
 
 IP CAMERA needs MAC dhcp Reservation:
 CoreBABA:
 ip dhcp pool CAM6
-host 10._.50.6 255.255.255.0
-client-identifier 001a.0709.c258
+host 10.41.50.6 255.255.255.0
+client-identifier 001a.0706.c2fe
 ip dhcp pool CAM8
-host 10._.50.8 255.255.255.0
+host 10.41.50.8 255.255.255.0
 client-identifier 001a.0704.7f5b
 end
 sh ip dhcp binding
