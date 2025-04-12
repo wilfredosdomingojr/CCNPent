@@ -212,21 +212,21 @@ telephony-service
    ip source-address 10.41.100.8 port 2000
    create cnf-files
 ephone-dn 1
-  number _41
+  number 4111
 ephone-dn 2
-  number _41
+  number 4122
 ephone-dn 3
-  number _41
+  number 4133
 ephone-dn 4
-  number _41
+  number 4144
 ephone-dn 5
-  number _41
+  number 4155
 ephone-dn 6
-  number _41
+  number 4166
 ephone-dn 7
-  number _41
+  number 4177
 ephone-dn 8
-  number _41	
+  number 4188
 Ephone 1
   Mac-address 8478.aced.5889
   type 8945
