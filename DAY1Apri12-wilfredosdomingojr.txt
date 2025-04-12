@@ -228,12 +228,12 @@ ephone-dn 7
 ephone-dn 8
   number _41	
 Ephone 1
-  Mac-address ____.____.____
+  Mac-address 8478.aced.5889
   type 8945
   button 1:1 2:3 3:2 4:4
   restart
 Ephone 2
-  Mac-address ____.____.____
+  Mac-address b4e9.b0b1.715b
   type 8945
   button 1:5 2:6 3:7 4:8
   restart  
