@@ -182,22 +182,22 @@ config t
       exec-timeout 0 0
    Int Fa 0/0
      no shutdown
-	 ip add 10._.100.8 255.255.255.0 
+	 ip add 10.41.100.8 255.255.255.0 
 	 end
    
 !!!CUCM ANALOG PHONES CONFIG
 configure terminal
 dial-peer voice 1 pots
-   destination-pattern m00
+   destination-pattern 41
    port 0/0/0
 dial-peer voice 2 pots
-   destination-pattern m01
+   destination-pattern 41
    port 0/0/1
 dial-peer voice 3 pots
-   destination-pattern m02
+   destination-pattern 41
    port 0/0/2
 dial-peer voice 4 pots
-   destination-pattern m03
+   destination-pattern 41
    port 0/0/3
 end
 
